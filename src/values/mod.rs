@@ -3,6 +3,7 @@
 
 
 use super::*;
+use ::std::mem::transmute;
 
 
 include!("BooleanSassValue.rs");
@@ -18,6 +19,7 @@ include!("NumberSassValue.rs");
 include!("Sass_Value_Ext.rs");
 include!("SassValue.rs");
 include!("SassValueError.rs");
+include!("SassValueType.rs");
 include!("StringSassValue.rs");
 include!("WarningSassValue.rs");
 include!("ValueMapSassValueIterator.rs");

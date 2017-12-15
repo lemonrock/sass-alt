@@ -294,11 +294,11 @@ impl SassValue
 		pointer
 	}
 	
-	/// Create a new string SassValue using this object which will be ***free-ed*** when it is dropped unless `transfer_ownership_to_c()` is called.
+	/// Type of this SassValue; useful for matching on
 	#[inline(always)]
-	pub fn tag(self) -> Sass_Tag
+	pub fn type_(&self) -> SassValueType
 	{
-		self.0.tag()
+		unsafe { transmute(self.0.tag() as u32 as u8) }
 	}
 	
 	/// Create a new string SassValue using this object which will be ***free-ed*** when it is dropped unless `transfer_ownership_to_c()` is called.
