@@ -54,8 +54,31 @@ impl SassFunctionList
 		let cookie = cb.get_cookie();
 		let raw_this = cookie as *mut SassFunctionTraitObject;
 		let this = unsafe { &mut *raw_this };
-		let sass_value = this.callback(SassValue(s_args as *mut _, false), SassCompiler(comp));
-		sass_value.transfer_ownership_to_c()
+		let arguments = SassValue(s_args as *mut _, false);
+		
+		let result = if let Ok(Some(arguments_list)) = arguments.as_list()
+		{
+			match this.callback(arguments_list, SassCompiler(comp))
+			{
+				Ok(result) => result,
+				Err(error) =>
+				{
+					if let Ok(string) = CString::new(error.as_ref())
+					{
+						SassValue::new_error(&string)
+					}
+					else
+					{
+						SassValue::new_error(&CString::new("error from custom SASS function was invalid").unwrap())
+					}
+				},
+			}
+		}
+		else
+		{
+			SassValue::new_error(&CString::new("arguments supplied were not a list; is this a bug in libsass?").unwrap())
+		};
+		result.transfer_ownership_to_c()
 	}
 	
 	#[inline(always)]

@@ -5,12 +5,12 @@
 /// A type to model SASS functions.
 pub trait SassFunction: Debug
 {
-	/// The signature of this SASS function including its name, eg `foo()`.
+	/// The signature of this SASS function including its name, eg `foo()` or `rgba($red, $green, $blue, $alpha)` or `mix($color-1, $color-2, $weight: 50%)` (with a default for `$weight`).
 	/// There are also four special signatures. See `SassFunctionSignature`.
 	/// The fallback implementation will be given the name of the called function as the first argument, before all the original function arguments.
 	#[inline(always)]
 	fn signature(&self) -> SassFunctionSignature;
 	
 	/// The implementation of this SASS function.
-	fn callback(&mut self, arguments: SassValue, compiler: SassCompiler) -> SassValue;
+	fn callback(&mut self, arguments: ListSassValue, compiler: SassCompiler) -> Result<SassValue, Cow<'static, str>>;
 }

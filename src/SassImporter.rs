@@ -7,12 +7,14 @@
 /// Include it by using `use ::sass_alt::Sass_Import_Entry_Ext;`.
 pub trait SassImporter: Debug
 {
-	/// The priority of this callback. And, weirdly, it really is a double-precision floating point value.
+	/// The priority of this importer / header. And, weirdly, it really is a double-precision floating point value.
 	fn priority(&self) -> f64
 	{
 		0.0f64
 	}
 	
 	/// The implementation of this SASS importer.
-	fn callback(&mut self, path: &CStr, compiler: SassCompiler) -> Vec<Sass_Import_Entry>;
+	/// Return Some() with a list of import entries (sources of CSS or SASS data).
+	/// Return None to tell libsass to handle the import by itself (as if no custom importer was in use).
+	fn callback(&mut self, path: &CStr, compiler: SassCompiler) -> Result<Option<Vec<SassImportEntry>>, SassImporterError>;
 }

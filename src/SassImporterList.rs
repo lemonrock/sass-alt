@@ -56,17 +56,27 @@ impl SassImporterList
 		let this = unsafe { &mut *raw_this };
 		let c_str_path = unsafe { CStr::from_ptr(path) };
 		
-		let import_entries = this.callback(c_str_path, SassCompiler(comp));
-		
-		let list = Sass_Import_List::make(import_entries.len());
-		let mut index = 0;
-		for import_entry in import_entries
+		match this.callback(c_str_path, SassCompiler(comp))
 		{
-			list.set_list_entry(index, import_entry);
-			index += 1;
+			Ok(import_entries) => if let Some(import_entries) = import_entries
+			{
+				let list = Sass_Import_List::make(import_entries.len());
+				let mut index = 0;
+				for import_entry in import_entries
+				{
+					list.set_list_entry(index, import_entry.transfer_ownership_to_c());
+					index += 1;
+				}
+				list
+			}
+			else
+			{
+				// Probably the same as null, but libsass documentation insists on zero.
+				0 as *mut _
+			},
+			
+			Err(error) => error.into_sass_import_list()
 		}
-		
-		list
 	}
 	
 	#[inline(always)]

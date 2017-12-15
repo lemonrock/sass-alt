@@ -6,6 +6,10 @@
 #[allow(non_camel_case_types)]
 pub trait Sass_Import_Entry_Ext
 {
+	/// Delete (drop) a Sass_import_Entry
+	#[inline(always)]
+	fn delete(self);
+	
 	/// Get the absolute path of an import.
 	/// Can be null.
 	#[inline(always)]
@@ -46,6 +50,15 @@ pub trait Sass_Import_Entry_Ext
 
 impl Sass_Import_Entry_Ext for Sass_Import_Entry
 {
+	#[inline(always)]
+	fn delete(self)
+	{
+		if !self.is_null()
+		{
+			unsafe { sass_delete_import(self) }
+		}
+	}
+	
 	#[inline(always)]
 	fn get_abs_path<'a>(self) -> Option<&'a CStr>
 	{

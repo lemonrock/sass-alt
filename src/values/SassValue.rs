@@ -188,25 +188,17 @@ impl SassValue
 		}
 	}
 	
-	/// Is this owned by Rust
+	/// Is this owned by Rust?
 	#[inline(always)]
-	pub fn is_owned_by_rust(&self) -> bool
+	fn is_owned_by_rust(&self) -> bool
 	{
 		self.1
 	}
 	
-	/// Wraps a pointer from C but does take ownership; when the returned instance is dropped, the underlying pointer from C ***is not free-ed***.
-	#[inline(always)]
-	pub fn wrap_from_c(from_c: *mut Sass_Value) -> Self
-	{
-		SassValue(from_c, false)
-	}
-	
-	#[inline(always)]
 	/// Forgets this object and yields up original C pointer.
 	/// Does not free this object.
 	#[inline(always)]
-	pub fn transfer_ownership_to_c(mut self) -> *mut Sass_Value
+	pub(crate) fn transfer_ownership_to_c(mut self) -> *mut Sass_Value
 	{
 		self.1 = false;
 		let pointer = self.0;
@@ -299,43 +291,3 @@ impl SassValue
 		Self::made_by_c(unsafe { sass_make_map(size) })
 	}
 }
-
-
-/*
-
-bool sass_value_is_list (const union Sass_Value* v);
-union Sass_Value* sass_make_list    (size_t len, enum Sass_Separator sep, bool is_bracketed);
-
-// Getters and setters for Sass_List
-enum Sass_Separator sass_list_get_separator (const union Sass_Value* v);
-void sass_list_set_separator (union Sass_Value* v, enum Sass_Separator value);
-
-// Getters and setters for Sass_List values
-union Sass_Value* sass_list_get_value (const union Sass_Value* v, size_t i);
-void sass_list_set_value (union Sass_Value* v, size_t i, union Sass_Value* value);
-
-
-bool sass_value_is_map (const union Sass_Value* v);
-union Sass_Value* sass_make_map     (size_t len);
-
-// Getter for the number of items in map
-size_t sass_map_get_length (const union Sass_Value* v);
-// Getters and setters for Sass_Map keys and values
-union Sass_Value* sass_map_get_key (const union Sass_Value* v, size_t i);
-void sass_map_set_key (union Sass_Value* v, size_t i, union Sass_Value*);
-union Sass_Value* sass_map_get_value (const union Sass_Value* v, size_t i);
-void sass_map_set_value (union Sass_Value* v, size_t i, union Sass_Value*);
-
-
-
-// Execute an operation for two Sass_Values and return the result as a Sass_Value too
-union Sass_Value* sass_value_op (enum Sass_OP op, const union Sass_Value* a, const union Sass_Value* b);
-
-
-
-
-
-
-
-
-*/
