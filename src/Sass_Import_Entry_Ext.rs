@@ -44,6 +44,7 @@ pub trait Sass_Import_Entry_Ext
 	fn get_error_message<'a>(self) -> Option<&'a CStr>;
 	
 	/// Set an error.
+	/// The returned value Self, is the same as that passed, self, ie it is for convenience.
 	#[inline(always)]
 	fn set_error(self, message: &CStr, line: usize, column: usize) -> Self;
 }

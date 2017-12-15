@@ -15,9 +15,7 @@ impl SassImporterError
 	{
 		let entry = SassImportEntry::make_import_entry(imp_path, abs_path, None, None);
 		assert!(!entry.is_null());
-		
-		// TODO: does this free it?
-		let entry = entry.set_error(message, line, column);
+		entry.set_error(message, line, column);
 		SassImporterError(SassImportEntry(entry, true))
 	}
 	

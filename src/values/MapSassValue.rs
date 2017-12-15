@@ -12,6 +12,13 @@ pub struct MapSassValue<'a>
 
 impl<'a> MapSassValue<'a>
 {
+	/// Is empty.
+	#[inline(always)]
+	pub fn is_empty(&self) -> bool
+	{
+		self.length() == 0
+	}
+	
 	/// Get length.
 	#[inline(always)]
 	pub fn length(&self) -> usize

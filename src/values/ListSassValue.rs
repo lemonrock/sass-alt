@@ -11,6 +11,13 @@ pub struct ListSassValue<'a>
 
 impl<'a> ListSassValue<'a>
 {
+	/// Is empty.
+	#[inline(always)]
+	pub fn is_empty(&self) -> bool
+	{
+		self.length() == 0
+	}
+	
 	/// Get length.
 	#[inline(always)]
 	pub fn length(&self) -> usize

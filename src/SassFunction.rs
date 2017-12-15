@@ -12,5 +12,6 @@ pub trait SassFunction: Debug
 	fn signature(&self) -> SassFunctionSignature;
 	
 	/// The implementation of this SASS function.
+	/// Errors are converted into ErrorSassValue.
 	fn callback(&mut self, arguments: ListSassValue, compiler: SassCompiler) -> Result<SassValue, Cow<'static, str>>;
 }

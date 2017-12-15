@@ -3,7 +3,6 @@
 
 
 /// A type to model SASS importers.
-/// See `make_import_entry` and `make_import_error()` on SassCompiler for helpers to create Sass_Import_Entry
 /// Include it by using `use ::sass_alt::Sass_Import_Entry_Ext;`.
 pub trait SassImporter: Debug
 {
@@ -14,7 +13,8 @@ pub trait SassImporter: Debug
 	}
 	
 	/// The implementation of this SASS importer.
-	/// Return Some() with a list of import entries (sources of CSS or SASS data).
-	/// Return None to tell libsass to handle the import by itself (as if no custom importer was in use).
+	/// `path` is the value supplied in the `@import` statement.
+	/// Return Ok(Some(entries)) with a list of import entries (sources of CSS or SASS data).
+	/// Return Ok(Some(None)) to tell libsass to handle the import by itself (as if no custom importer was in use).
 	fn callback(&mut self, path: &CStr, compiler: SassCompiler) -> Result<Option<Vec<SassImportEntry>>, SassImporterError>;
 }
