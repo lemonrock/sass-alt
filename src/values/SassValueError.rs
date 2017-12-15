@@ -136,3 +136,20 @@ quick_error!
 		}
 	}
 }
+
+impl SassValueError
+{
+	/// Convenience method for creation FunctionFailed error.
+	#[inline(always)]
+	pub fn function_failed_from_static_str(reason: &'static str) -> Self
+	{
+		SassValueError::FunctionFailed(Cow::Borrowed(reason))
+	}
+	
+	/// Convenience method for creation FunctionFailed error.
+	#[inline(always)]
+	pub fn function_failed_from_string(reason: String) -> Self
+	{
+		SassValueError::FunctionFailed(Cow::Owned(reason))
+	}
+}
