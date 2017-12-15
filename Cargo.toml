@@ -4,7 +4,7 @@
 
 [package]
 name = "sass-alt"
-description = "A set of extensions to sass-rs that allow use of Rust code as SASS functions"
+description = "A more powerful alternative to sass-rs that provides SASS functions, SASS importers and source map manipulation."
 keywords = ["sass"]
 license = "MIT"
 authors = ["Raphael Cohn <raphael.cohn@stormmq.com>"]
