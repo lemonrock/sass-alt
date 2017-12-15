@@ -15,6 +15,15 @@ impl Drop for SassFunctionList
 	}
 }
 
+impl Default for SassFunctionList
+{
+	#[inline(always)]
+	fn default() -> Self
+	{
+		Self::new(vec![])
+	}
+}
+
 impl SassFunctionList
 {
 	/// Create a new list of SASS functions. Called by value as we need to take ownership of the SASS functions to manage their lifetimes.
@@ -24,7 +33,7 @@ impl SassFunctionList
 		let list = Sass_Function_List::make(sass_functions.len());
 		let mut drop_sass_functions_when_function_list_drops = Vec::with_capacity(sass_functions.len());
 		let mut index = 0;
-		for mut sass_function in sass_functions
+		for sass_function in sass_functions
 		{
 			let signature = CString::new(sass_function.signature().as_str()).unwrap();
 			

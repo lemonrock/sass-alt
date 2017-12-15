@@ -15,6 +15,15 @@ impl Drop for SassImporterList
 	}
 }
 
+impl Default for SassImporterList
+{
+	#[inline(always)]
+	fn default() -> Self
+	{
+		Self::new(vec![])
+	}
+}
+
 impl SassImporterList
 {
 	/// Create a new list of SASS importers. Called by value as we need to take ownership of the SASS importers to manage their lifetimes.
@@ -24,7 +33,7 @@ impl SassImporterList
 		let list = Sass_Importer_List::make(sass_importers.len());
 		let mut drop_sass_importers_when_importer_list_drops = Vec::with_capacity(sass_importers.len());
 		let mut index = 0;
-		for mut sass_importer in sass_importers
+		for sass_importer in sass_importers
 		{
 			let priority = sass_importer.priority();
 			
