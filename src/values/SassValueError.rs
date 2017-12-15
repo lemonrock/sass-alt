@@ -14,6 +14,14 @@ quick_error!
 			description(reason.as_ref())
 			display("Function failed")
 		}
+		
+		/// Could not convert C string to UTF-8.
+		Utf8ConversionFromCStringFailed(cause: Utf8Error)
+		{
+			description(cause.description())
+			display("Could not convert to UTF-8 from C String because {}", cause)
+			from()
+		}
 	
 		/// Is not a boolean.
 		IsNotABoolean
