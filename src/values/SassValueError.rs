@@ -22,6 +22,14 @@ quick_error!
 			display("Could not convert to UTF-8 from C String because {}", cause)
 			from()
 		}
+		
+		/// Could not convert into C string.
+		ConversionIntoCStringFailed(cause: NulError)
+		{
+			description(cause.description())
+			display("Could not convert into CString because {}", cause)
+			from()
+		}
 	
 		/// Is not a boolean.
 		IsNotABoolean
@@ -141,15 +149,15 @@ impl SassValueError
 {
 	/// Convenience method for creation FunctionFailed error.
 	#[inline(always)]
-	pub fn function_failed_from_static_str(reason: &'static str) -> Self
+	pub fn function_failed_from_static_str(reason: &'static str) -> Result<(), Self>
 	{
-		SassValueError::FunctionFailed(Cow::Borrowed(reason))
+		Err(SassValueError::FunctionFailed(Cow::Borrowed(reason)))
 	}
 	
 	/// Convenience method for creation FunctionFailed error.
 	#[inline(always)]
-	pub fn function_failed_from_string(reason: String) -> Self
+	pub fn function_failed_from_string(reason: String) -> Result<(), Self>
 	{
-		SassValueError::FunctionFailed(Cow::Owned(reason))
+		Err(SassValueError::FunctionFailed(Cow::Owned(reason)))
 	}
 }

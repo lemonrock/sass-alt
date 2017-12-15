@@ -47,6 +47,7 @@ use ::std::clone::Clone;
 use ::std::error::Error;
 use ::std::ffi::CStr;
 use ::std::ffi::CString;
+use ::std::ffi::NulError;
 use ::std::ffi::OsString;
 use ::std::fmt::Debug;
 use ::std::mem::forget;

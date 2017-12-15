@@ -296,6 +296,13 @@ impl SassValue
 	
 	/// Create a new string SassValue using this object which will be ***free-ed*** when it is dropped unless `transfer_ownership_to_c()` is called.
 	#[inline(always)]
+	pub fn tag(self) -> Sass_Tag
+	{
+		self.0.tag()
+	}
+	
+	/// Create a new string SassValue using this object which will be ***free-ed*** when it is dropped unless `transfer_ownership_to_c()` is called.
+	#[inline(always)]
 	pub fn stringify(self, compressed: bool, precision: u8) -> Self
 	{
 		let stringified = self.0.stringify(compressed, precision);
