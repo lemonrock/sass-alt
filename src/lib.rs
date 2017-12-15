@@ -3,6 +3,7 @@
 
 
 #![deny(missing_docs)]
+#![recursion_limit="128"]
 
 
 //! This crate provides a simple API that allows one to compile SASS and use Rust functions as SASS functions, importers and headers.
@@ -32,7 +33,6 @@
 //! ```
 //!
 
-
 extern crate libc;
 #[macro_use] extern crate quick_error;
 pub extern crate sass_sys;
@@ -44,6 +44,7 @@ use ::libc::c_void;
 use ::sass_sys::*;
 use ::std::borrow::Cow;
 use ::std::clone::Clone;
+use ::std::error::Error;
 use ::std::ffi::CStr;
 use ::std::ffi::CString;
 use ::std::ffi::OsString;

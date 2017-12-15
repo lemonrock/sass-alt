@@ -56,21 +56,18 @@ impl SassFunctionList
 		let this = unsafe { &mut *raw_this };
 		let arguments = SassValue(s_args as *mut _, false);
 		
-		let result = if let Ok(Some(arguments_list)) = arguments.as_list()
+		let result = if let Ok(arguments_list) = arguments.as_list()
 		{
 			match this.callback(arguments_list, SassCompiler(comp))
 			{
 				Ok(result) => result,
-				Err(error) =>
+				Err(error) => if let Ok(c_string) = CString::new(error.description())
 				{
-					if let Ok(string) = CString::new(error.as_ref())
-					{
-						SassValue::new_error(&string)
-					}
-					else
-					{
-						SassValue::new_error(&CString::new("error from custom SASS function was invalid").unwrap())
-					}
+					SassValue::new_error(&c_string)
+				}
+				else
+				{
+					SassValue::new_error(&CString::new("error from custom SASS function was invalid").unwrap())
 				},
 			}
 		}

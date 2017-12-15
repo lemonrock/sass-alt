@@ -13,5 +13,5 @@ pub trait SassFunction: Debug
 	
 	/// The implementation of this SASS function.
 	/// Errors are converted into ErrorSassValue.
-	fn callback(&mut self, arguments: ListSassValue, compiler: SassCompiler) -> Result<SassValue, Cow<'static, str>>;
+	fn callback(&mut self, arguments: ListSassValue, compiler: SassCompiler) -> Result<SassValue, SassValueError>;
 }

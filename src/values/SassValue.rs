@@ -36,29 +36,21 @@ impl SassValue
 		unsafe { sass_value_is_null(self.0 as *const _) }
 	}
 	
-	/// Returns None if null.
-	/// Returns an error if this is not a boolean or null.
+	/// Returns an error if this is not a boolean.
 	#[inline(always)]
-	pub fn as_number<'a>(&'a self) -> Result<Option<NumberSassValue<'a>>, ()>
+	pub fn as_boolean<'a>(&'a self) -> Result<BooleanSassValue<'a>, SassValueError>
 	{
-		if self.is_null()
+		match self.as_boolean_or_null()?
 		{
-			Ok(None)
-		}
-		else if unsafe { sass_value_is_number(self.0 as *const _) }
-		{
-			Ok(Some(NumberSassValue { reference: self }))
-		}
-		else
-		{
-			Err(())
+			None => Err(SassValueError::IsNotABoolean),
+			Some(value) => Ok(value),
 		}
 	}
 	
 	/// Returns None if null.
 	/// Returns an error if this is not a boolean or null.
 	#[inline(always)]
-	pub fn as_boolean<'a>(&'a self) -> Result<Option<BooleanSassValue<'a>>, ()>
+	pub fn as_boolean_or_null<'a>(&'a self) -> Result<Option<BooleanSassValue<'a>>, SassValueError>
 	{
 		if self.is_null()
 		{
@@ -70,71 +62,25 @@ impl SassValue
 		}
 		else
 		{
-			Err(())
+			Err(SassValueError::IsNotABooleanOrNull)
 		}
 	}
 	
-	/// Returns None if null.
-	/// Returns an error if this is not a warning or null.
+	/// Returns an error if this is not a color.
 	#[inline(always)]
-	pub fn as_warning<'a>(&'a self) -> Result<Option<WarningSassValue<'a>>, ()>
+	pub fn as_color<'a>(&'a self) -> Result<ColorSassValue<'a>, SassValueError>
 	{
-		if self.is_null()
+		match self.as_color_or_null()?
 		{
-			Ok(None)
-		}
-		else if unsafe { sass_value_is_warning(self.0 as *const _) }
-		{
-			Ok(Some(WarningSassValue { reference: self }))
-		}
-		else
-		{
-			Err(())
-		}
-	}
-	
-	/// Returns None if null.
-	/// Returns an error if this is not a error or null.
-	#[inline(always)]
-	pub fn as_error<'a>(&'a self) -> Result<Option<ErrorSassValue<'a>>, ()>
-	{
-		if self.is_null()
-		{
-			Ok(None)
-		}
-		else if unsafe { sass_value_is_error(self.0 as *const _) }
-		{
-			Ok(Some(ErrorSassValue { reference: self }))
-		}
-		else
-		{
-			Err(())
-		}
-	}
-	
-	/// Returns None if null.
-	/// Returns an error if this is not a string or null.
-	#[inline(always)]
-	pub fn as_string<'a>(&'a self) -> Result<Option<StringSassValue<'a>>, ()>
-	{
-		if self.is_null()
-		{
-			Ok(None)
-		}
-		else if unsafe { sass_value_is_string(self.0 as *const _) }
-		{
-			Ok(Some(StringSassValue { reference: self }))
-		}
-		else
-		{
-			Err(())
+			None => Err(SassValueError::IsNotAColor),
+			Some(value) => Ok(value),
 		}
 	}
 	
 	/// Returns None if null.
 	/// Returns an error if this is not a color or null.
 	#[inline(always)]
-	pub fn as_color<'a>(&'a self) -> Result<Option<ColorSassValue<'a>>, ()>
+	pub fn as_color_or_null<'a>(&'a self) -> Result<Option<ColorSassValue<'a>>, SassValueError>
 	{
 		if self.is_null()
 		{
@@ -146,14 +92,55 @@ impl SassValue
 		}
 		else
 		{
-			Err(())
+			Err(SassValueError::IsNotAColorOrNull)
+		}
+	}
+	
+	/// Returns an error if this is not an error.
+	#[inline(always)]
+	pub fn as_error<'a>(&'a self) -> Result<ErrorSassValue<'a>, SassValueError>
+	{
+		match self.as_error_or_null()?
+		{
+			None => Err(SassValueError::IsNotAnError),
+			Some(value) => Ok(value),
+		}
+	}
+	
+	/// Returns None if null.
+	/// Returns an error if this is not a error or null.
+	#[inline(always)]
+	pub fn as_error_or_null<'a>(&'a self) -> Result<Option<ErrorSassValue<'a>>, SassValueError>
+	{
+		if self.is_null()
+		{
+			Ok(None)
+		}
+		else if unsafe { sass_value_is_error(self.0 as *const _) }
+		{
+			Ok(Some(ErrorSassValue { reference: self }))
+		}
+		else
+		{
+			Err(SassValueError::IsNotAnErrorOrNull)
+		}
+	}
+	
+	/// Returns an error if this is not a list.
+	#[inline(always)]
+	pub fn as_list<'a>(&'a self) -> Result<ListSassValue<'a>, SassValueError>
+	{
+		match self.as_list_or_null()?
+		{
+			None => Err(SassValueError::IsNotAList),
+			Some(value) => Ok(value),
 		}
 	}
 	
 	/// Returns None if null.
 	/// Returns an error if this is not a list or null.
 	#[inline(always)]
-	pub fn as_list<'a>(&'a self) -> Result<Option<ListSassValue<'a>>, ()>
+	pub fn as_list_or_null<'a>(&'a self) -> Result<Option<ListSassValue<'a>>, SassValueError>
 	{
 		if self.is_null()
 		{
@@ -165,14 +152,25 @@ impl SassValue
 		}
 		else
 		{
-			Err(())
+			Err(SassValueError::IsNotAListOrNull)
+		}
+	}
+	
+	/// Returns an error if this is not a map.
+	#[inline(always)]
+	pub fn as_map<'a>(&'a self) -> Result<MapSassValue<'a>, SassValueError>
+	{
+		match self.as_map_or_null()?
+		{
+			None => Err(SassValueError::IsNotAMap),
+			Some(value) => Ok(value),
 		}
 	}
 	
 	/// Returns None if null.
 	/// Returns an error if this is not a list or null.
 	#[inline(always)]
-	pub fn as_map<'a>(&'a self) -> Result<Option<MapSassValue<'a>>, ()>
+	pub fn as_map_or_null<'a>(&'a self) -> Result<Option<MapSassValue<'a>>, SassValueError>
 	{
 		if self.is_null()
 		{
@@ -184,7 +182,97 @@ impl SassValue
 		}
 		else
 		{
-			Err(())
+			Err(SassValueError::IsNotAMapOrNull)
+		}
+	}
+	
+	/// Returns an error if this is not a number.
+	#[inline(always)]
+	pub fn as_number<'a>(&'a self) -> Result<NumberSassValue<'a>, SassValueError>
+	{
+		match self.as_number_or_null()?
+		{
+			None => Err(SassValueError::IsNotANumber),
+			Some(value) => Ok(value),
+		}
+	}
+	
+	/// Returns None if null.
+	/// Returns an error if this is not a number or null.
+	#[inline(always)]
+	pub fn as_number_or_null<'a>(&'a self) -> Result<Option<NumberSassValue<'a>>, SassValueError>
+	{
+		if self.is_null()
+		{
+			Ok(None)
+		}
+		else if unsafe { sass_value_is_number(self.0 as *const _) }
+		{
+			Ok(Some(NumberSassValue { reference: self }))
+		}
+		else
+		{
+			Err(SassValueError::IsNotANumberOrNull)
+		}
+	}
+	
+	/// Returns an error if this is not a string.
+	#[inline(always)]
+	pub fn as_string<'a>(&'a self) -> Result<StringSassValue<'a>, SassValueError>
+	{
+		match self.as_string_or_null()?
+		{
+			None => Err(SassValueError::IsNotAString),
+			Some(value) => Ok(value),
+		}
+	}
+	
+	/// Returns None if null.
+	/// Returns an error if this is not a string or null.
+	#[inline(always)]
+	pub fn as_string_or_null<'a>(&'a self) -> Result<Option<StringSassValue<'a>>, SassValueError>
+	{
+		if self.is_null()
+		{
+			Ok(None)
+		}
+		else if unsafe { sass_value_is_string(self.0 as *const _) }
+		{
+			Ok(Some(StringSassValue { reference: self }))
+		}
+		else
+		{
+			Err(SassValueError::IsNotAStringOrNull)
+		}
+	}
+	
+	/// Returns an error if this is not a warning.
+	#[inline(always)]
+	pub fn as_warning<'a>(&'a self) -> Result<WarningSassValue<'a>, SassValueError>
+	{
+		match self.as_warning_or_null()?
+		{
+			None => Err(SassValueError::IsNotAWarning),
+			Some(value) => Ok(value),
+		}
+	}
+	
+	/// Returns None if null.
+	/// Returns an error if this is not a warning or null.
+	#[inline(always)]
+	pub fn as_warning_or_null<'a>(&'a self) -> Result<Option<WarningSassValue<'a>>, SassValueError>
+	{
+		if self.is_null()
+		{
+			Ok(None)
+		}
+		else if unsafe { sass_value_is_warning(self.0 as *const _) }
+		{
+			Ok(Some(WarningSassValue { reference: self }))
+		}
+		else
+		{
+			Err(SassValueError::IsNotAWarningOrNull)
 		}
 	}
 	
