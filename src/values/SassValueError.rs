@@ -149,14 +149,14 @@ impl SassValueError
 {
 	/// Convenience method for creation FunctionFailed error.
 	#[inline(always)]
-	pub fn function_failed_from_static_str(reason: &'static str) -> Result<(), Self>
+	pub fn function_failed_from_static_str<R>(reason: &'static str) -> Result<R, Self>
 	{
 		Err(SassValueError::FunctionFailed(Cow::Borrowed(reason)))
 	}
 	
 	/// Convenience method for creation FunctionFailed error.
 	#[inline(always)]
-	pub fn function_failed_from_string(reason: String) -> Result<(), Self>
+	pub fn function_failed_from_string<R>(reason: String) -> Result<R, Self>
 	{
 		Err(SassValueError::FunctionFailed(Cow::Owned(reason)))
 	}
